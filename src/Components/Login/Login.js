@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 
 import Logo from '../../olx-logo.png';
 import './Login.css';
+import { FirebaseContext } from '../../store/Context';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+   const [email,setEmail] = useState('');
+   const [password,setPassword] =useState('')
+   const {firebase} = useContext(FirebaseContext)
+   const auth = getAuth();
+   const navigate = useNavigate()
+   const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+     
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/');
+      
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error('Login error:', errorCode, errorMessage);
+      // You can show an error message to the user here if needed
+    }
+  };
   return (
     <div>
       <div className="loginParentDiv">
         <img width="200px" height="200px" src={Logo}></img>
-        <form>
+        <form onSubmit={handleLogin}>
           <label htmlFor="fname">Email</label>
           <br />
           <input
@@ -16,7 +39,8 @@ function Login() {
             type="email"
             id="fname"
             name="email"
-            defaultValue="John"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
           />
           <br />
           <label htmlFor="lname">Password</label>
@@ -26,7 +50,8 @@ function Login() {
             type="password"
             id="lname"
             name="password"
-            defaultValue="Doe"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
           />
           <br />
           <br />

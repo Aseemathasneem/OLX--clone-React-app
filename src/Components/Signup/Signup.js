@@ -6,6 +6,7 @@ import { FirebaseContext } from '../../store/Context';
 import { getAuth,createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { firestore } from '../../firebase/config';
 import { addDoc, collection } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
   const [username,setUsername] = useState('')
@@ -13,10 +14,11 @@ export default function Signup() {
   const [phone,setPhone]  = useState('')
   const [password,setPassword] = useState('')
   const {firebase}  = useContext(FirebaseContext)
-
   const auth = getAuth();
+  const navigate = useNavigate()
     const handleSubmit = (e)=>{
       e.preventDefault()
+      
       createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up
@@ -32,12 +34,9 @@ export default function Signup() {
           })
             .then(() => {
               console.log('User details added to Firestore successfully');
-              
+              navigate('/login');
             })
-            .catch((firestoreError) => {
-              console.error('Error adding user details to Firestore:', firestoreError);
-              // Handle error adding user details to Firestore
-            });
+           
         })
         
     })
@@ -45,7 +44,7 @@ export default function Signup() {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error('Signup error:', errorCode, errorMessage);
-      // Handle errors, e.g., display an error message to the user
+      
     });
     }
   return (
