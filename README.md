@@ -20,5 +20,17 @@ Ensure you have Node.js and npm installed.
 ### Installation
 
 1. Clone the repository:
-   ```bash
+   
    git clone your-repo-url
+2.Navigate to the project directory:
+   cd olx
+3.Install dependencies:
+    npm install
+4.To start the development server, run:
+   npm start
+The app will be available at http://localhost:3000.
+
+To create a production build, use:
+    npm run build
+
+   
