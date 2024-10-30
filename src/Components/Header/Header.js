@@ -21,7 +21,14 @@ function Header() {
       console.error('Logout error:', error.message);
       // Handle error if needed
     }
+    
   };
+  const handleSellButtonClick =()=>{
+    navigate('/create');
+  }
+  const handleLoginClick=()=>{
+    navigate('/login')
+  }
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -49,15 +56,15 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>{user ? `Welcome ${user.displayName}` : 'Login'}</span>
+          <span onClick={handleLoginClick}>{user ? `Welcome ${user.displayName}` : 'Login'}</span>
           <hr />
         </div>
         {user && <span onClick={handleLogout}>Logout</span>}
         <div className="sellMenu">
-          <SellButton></SellButton>
+          <SellButton ></SellButton>
           <div className="sellMenuContent">
             <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+            <span onClick={handleSellButtonClick}>SELL</span>
           </div>
         </div>
       </div>

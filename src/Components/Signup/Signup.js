@@ -6,7 +6,7 @@ import { FirebaseContext } from '../../store/Context';
 import { getAuth,createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { firestore } from '../../firebase/config';
 import { addDoc, collection } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Signup() {
   const [username,setUsername] = useState('')
@@ -99,7 +99,7 @@ export default function Signup() {
           <br />
           <button>Signup</button>
         </form>
-        <a>Login</a>
+        <Link to="/login">Login</Link>
       </div>
     </div>
   );

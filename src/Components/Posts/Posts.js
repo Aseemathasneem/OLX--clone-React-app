@@ -1,9 +1,40 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import Heart from '../../assets/Heart';
 import './Post.css';
+import { FirebaseContext } from '../../store/Context';
+import { firestore } from '../../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
+
+import { PostContext } from "../../store/PostContext";
+import { useNavigate } from 'react-router-dom';
+
 
 function Posts() {
+ const {firebase}  = useContext(FirebaseContext)
+ const [products,setProducts] = useState([])
+ const {setPostDetails} = useContext(PostContext)
+ const navigate = useNavigate()
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const productsCollection = collection(firestore, 'products');
+      const querySnapshot = await getDocs(productsCollection);
+
+      const allPost = querySnapshot.docs.map((product) => ({
+        ...product.data(),
+        id: product.id
+      }));
+      setProducts(allPost);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  };
+
+  fetchData();
+
+ }, [firebase]); // Add firebase as a dependency if it is being used inside useEffect
 
   return (
     <div className="postParentDiv">
@@ -13,24 +44,32 @@ function Posts() {
           <span>View more</span>
         </div>
         <div className="cards">
-          <div
+          {products.map(product=>{
+
+          
+         return <div
             className="card"
+            onClick={()=>{
+              setPostDetails(product)
+              navigate('/view')
+            }}
           >
             <div className="favorite">
               <Heart></Heart>
             </div>
             <div className="image">
-              <img src="../../../Images/R15V3.jpg" alt="" />
+              <img src={product.url} alt="" />
             </div>
             <div className="content">
-              <p className="rate">&#x20B9; 250000</p>
-              <span className="kilometer">Two Wheeler</span>
-              <p className="name"> YAMAHA R15V3</p>
+              <p className="rate">&#x20B9; {product.price}</p>
+              <span className="kilometer">{product.category}</span>
+              <p className="name"> {product.name}</p>
             </div>
             <div className="date">
-              <span>Tue May 04 2021</span>
+              <span>{new Date(product.createdAt.seconds * 1000).toLocaleDateString()}</span>
             </div>
           </div>
+       }) }     
         </div>
       </div>
       <div className="recommendations">
